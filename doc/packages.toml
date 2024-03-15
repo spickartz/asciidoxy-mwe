@@ -1,0 +1,5 @@
+[packages]
+
+[packages.my-package]
+type = "local"
+package_dir = "./"

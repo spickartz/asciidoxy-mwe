@@ -1,0 +1,40 @@
+name: Build asciidoc documentation
+run-name: ${{ github.actor }} is building asciidoc documentation
+on: [push]
+jobs:
+  build-documentation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: sudo apt-get install -y doxygen python3 ruby
+      - name: Install asciidoxy
+        run: pip install asciidoxy
+      - name: Install asciidoctor
+        run: sudo gem install asciidoctor
+      - name: Run doxygen
+        working-directory: ./doc
+        run: doxygen Doxyfile
+      - name: Run asciidoxy
+        working-directory: ./doc
+        run: asciidoxy --spec-file packages.toml --log DEBUG index.adoc
+      - name: Upload artifactz
+        uses: actions/upload-artifact@v4
+        with:
+          name: asciidoc-page
+          path: doc/build/output
+  deploy-pages:
+    needs: build-documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download a single artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: asciidoc-page
+      - name: Deploy to GitHub Pages
+        uses: crazy-max/ghaction-github-pages@v4
+        with:
+          target_branch: gh-pages
+          build_dir: .
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

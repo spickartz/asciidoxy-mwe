@@ -1,0 +1,6 @@
+[package]
+name = "my-api"
+
+[reference]
+type = "doxygen"
+dir = "gen/xml"
