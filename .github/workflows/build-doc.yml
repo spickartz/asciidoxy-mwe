@@ -10,6 +10,10 @@ jobs:
         run: sudo apt-get install -y doxygen python3 ruby
       - name: Install asciidoxy
         run: pip install asciidoxy
+      - name: Show Doxygen version
+        run: doxygen --version
+      - name: Show AsciiDoxy version
+        run: asciidoxy -h
       - name: Install asciidoctor
         run: sudo gem install asciidoctor
       - name: Run doxygen
